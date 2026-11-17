@@ -3,6 +3,9 @@
 Every response is cached by (model, messages, params), so re-running an experiment costs no
 API calls and gives identical outputs. Works with Groq by default; set LLM_BASE_URL and
 LLM_API_KEY to point at any OpenAI-compatible server (OpenRouter, vLLM, Ollama, ...).
+
+The cache of every response behind the published numbers ships with the repository, so
+LLM_OFFLINE=1 replays them exactly without an API key; any request not in the cache fails.
 """
 from __future__ import annotations
 
@@ -18,9 +21,14 @@ from pathlib import Path
 
 BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.groq.com/openai/v1")
 CACHE_DIR = Path(os.environ.get("LLM_CACHE_DIR", "results/cache/llm"))
+OFFLINE = os.environ.get("LLM_OFFLINE") == "1"
 
 
 class DailyLimitReached(RuntimeError):
+    pass
+
+
+class NotInCache(RuntimeError):
     pass
 
 
@@ -80,6 +88,9 @@ def chat(model: str, messages: list[dict], *, max_tokens: int = 512, temperature
         out = json.loads(path.read_text(encoding="utf-8"))
         out["cached"] = True
         return out
+    if OFFLINE:
+        raise NotInCache(f"{model}: request not in {CACHE_DIR} (LLM_OFFLINE=1). "
+                         "Unset LLM_OFFLINE and provide LLM_API_KEY to run new requests.")
 
     need = sum(len(m["content"]) for m in messages) // 3 + max_tokens
     for attempt in range(20):  # per-minute limits clear quickly; daily limits raise above

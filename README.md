@@ -31,6 +31,18 @@ Everything except the two LLMs runs on CPU (small ONNX embedding and reranking m
 Model responses are cached on disk, so re-running a configuration is free and deterministic.
 Point `LLM_BASE_URL` at OpenRouter, vLLM or a local Ollama server to swap providers.
 
+### Reproduce the published numbers with no API key
+
+Every model response behind the results is committed in `results/cache/llm/`. Replay them:
+
+```bash
+LLM_OFFLINE=1 python -m rag_eval_kit.run configs/v4_grounded_prompt.yaml
+```
+
+This makes no network calls to any model and produces the same metrics byte for byte. Any request
+that is not in the cache (a new prompt, model or question) fails loudly instead of silently
+calling an API.
+
 ## Demo corpus
 
 A pinned slice of the public GitLab Handbook (benefits, time off, policies, expenses).
