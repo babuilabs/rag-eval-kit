@@ -73,7 +73,9 @@ def main() -> None:
     out = Path("results") / cfg["name"]
     out.mkdir(parents=True, exist_ok=True)
     (out / "answers.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    from .llm import OPENROUTER_HOSTS, PROVIDER
     metrics = {"config": cfg, "generator": GEN_MODEL, "judge": JUDGE_MODEL, "n_chunks": len(chunks),
+               "api": PROVIDER, "hosts": {m: OPENROUTER_HOSTS.get(m) for m in (GEN_MODEL, JUDGE_MODEL)} if PROVIDER == "openrouter" else None,
                **summarize(rows)}
     (out / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     print(json.dumps({k: metrics[k] for k in ("overall", "answer_accuracy", "retrieval_recall",

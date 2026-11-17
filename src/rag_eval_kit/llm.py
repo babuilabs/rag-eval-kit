@@ -19,9 +19,37 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.groq.com/openai/v1")
+PROVIDER = os.environ.get("LLM_PROVIDER", "openrouter")  # "openrouter" | "groq" | "custom"
+BASE_URL = os.environ.get("LLM_BASE_URL") or {
+    "openrouter": "https://openrouter.ai/api/v1",
+    "groq": "https://api.groq.com/openai/v1",
+}.get(PROVIDER, "")
 CACHE_DIR = Path(os.environ.get("LLM_CACHE_DIR", "results/cache/llm"))
 OFFLINE = os.environ.get("LLM_OFFLINE") == "1"
+
+# The same open-weight model can behave slightly differently on different hosts (quantisation,
+# kernels), so every OpenRouter request is pinned to one host with no fallback.
+OPENROUTER_HOSTS = {
+    "qwen/qwen3.8-27b": "PrimeIntellect",
+    "openai/gpt-oss-120b": "Near AI",
+    "openai/gpt-oss-20b": "Near AI",
+}
+
+
+def _for_openrouter(body: dict) -> dict:
+    """Translate provider-neutral options to OpenRouter's request format."""
+    body = dict(body)
+    effort = body.pop("reasoning_effort", None)
+    body.pop("include_reasoning", None)
+    if effort == "none":
+        body["reasoning"] = {"enabled": False}
+    elif effort:
+        body["reasoning"] = {"effort": effort, "exclude": True}
+    host = OPENROUTER_HOSTS.get(body["model"])
+    if host:
+        body["provider"] = {"order": [host], "allow_fallbacks": False}
+    body["usage"] = {"include": True}  # report the cost of each call
+    return body
 
 
 class DailyLimitReached(RuntimeError):
@@ -82,10 +110,13 @@ def chat(model: str, messages: list[dict], *, max_tokens: int = 512, temperature
     if json_mode:
         body["response_format"] = {"type": "json_object"}
     body.update(extra or {})
+    if PROVIDER == "openrouter":
+        body = _for_openrouter(body)
     key = hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
     path = CACHE_DIR / model.replace("/", "__") / f"{key}.json"
     if use_cache and path.exists():
         out = json.loads(path.read_text(encoding="utf-8"))
+        out.pop("request", None)
         out["cached"] = True
         return out
     if OFFLINE:
@@ -112,19 +143,21 @@ def chat(model: str, messages: list[dict], *, max_tokens: int = 512, temperature
                     raise DailyLimitReached(f"{model}: {msg[:200]}")
                 time.sleep((_seconds(e.headers.get("retry-after")) or min(60, 2 ** attempt)) + random.uniform(0, 2))
                 continue
-            if e.code >= 500:
-                time.sleep(2 ** attempt)
+            if e.code >= 500 and attempt < 6:  # host hiccup; a host that stays down is an error
+                time.sleep(min(60, 2 ** attempt))
                 continue
             raise RuntimeError(f"HTTP {e.code} from {model}: {msg[:300]}")
         except (urllib.error.URLError, TimeoutError):
-            time.sleep(2 ** attempt)
+            time.sleep(min(60, 2 ** attempt))
     else:
         raise RuntimeError(f"{model}: gave up after retries")
 
     out = {"content": data["choices"][0]["message"].get("content") or "",
-           "usage": data.get("usage", {}), "latency_s": round(time.time() - t0, 3)}
+           "usage": data.get("usage", {}), "latency_s": round(time.time() - t0, 3),
+           "host": data.get("provider")}
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(out), encoding="utf-8")
+    # keep the exact request next to the response so anyone can audit every prompt
+    path.write_text(json.dumps({**out, "request": body}, ensure_ascii=False), encoding="utf-8")
     out["cached"] = False
     return out
 
