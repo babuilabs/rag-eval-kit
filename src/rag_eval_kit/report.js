@@ -34,10 +34,17 @@ function paint(dots, classes) {
 }
 function count(node, to) {
   const from = +node.textContent || 0;
-  if (calm || from === to) { node.textContent = to; return; }
+  node.dataset.to = to;
+  if (calm || from === to || document.hidden) { node.textContent = to; return; }
   const t0 = performance.now();
-  const tick = t => { const k = Math.min((t - t0) / 600, 1); node.textContent = Math.round(from + (to - from) * k); if (k < 1) requestAnimationFrame(tick); };
+  const tick = t => {
+    if (+node.dataset.to !== to) return;  // a newer count took over
+    const k = Math.min((t - t0) / 600, 1); node.textContent = Math.round(from + (to - from) * k);
+    if (k < 1) requestAnimationFrame(tick);
+  };
   requestAnimationFrame(tick);
+  // Animation frames pause in background tabs; make sure the final number always lands.
+  setTimeout(() => { if (+node.dataset.to === to) node.textContent = to; }, 700);
 }
 
 // ---- Hero: step through the versions
