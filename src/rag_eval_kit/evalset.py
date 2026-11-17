@@ -292,7 +292,117 @@ def build() -> int:
     return 0
 
 
+TOPICS = {
+    "parental leave": r"parental|maternity|paternity",
+    "pension or retirement": r"pension|retirement|401|superannuation",
+    "medical insurance": r"medical|health insurance|healthcare",
+    "sick leave": r"sick",
+    "life insurance": r"life insurance|life assurance",
+    "public holidays and vacation": r"holiday|vacation|annual leave",
+}
+
+CHECK_NATURAL = CHECK_ANSWERABLE.replace(
+    "Return JSON:",
+    "4. natural: a real employee would plausibly ask exactly this question (not two unrelated questions glued together).\nReturn JSON:"
+).replace('"specific": true/false,', '"specific": true/false, "natural": true/false,')
+
+
+def comparison_pairs(docs: list[Document], rng: random.Random, n: int):
+    """Same benefit topic in two different countries' benefit pages: natural comparison questions."""
+    pages = [d for d in docs if "general-and-entity-benefits/" in d.doc_id and not d.doc_id.endswith("_index.md")]
+    by_topic: dict[str, list] = {}
+    for d in pages:
+        for c in heading_chunks(d, max_chars=2500):
+            if not c.text.startswith("["):
+                continue
+            head = c.text[1:c.text.index("]")]
+            body = c.text.split("\n", 1)[1]
+            for topic, pat in TOPICS.items():
+                if re.search(pat, head, re.I) and 300 <= len(body) <= 2500:
+                    by_topic.setdefault(topic, []).append(
+                        {"doc_id": d.doc_id, "title": d.title, "head": head, "text": body})
+    pairs, seen = [], set()
+    topics = sorted(by_topic)
+    for _ in range(n * 20):
+        if len(pairs) >= n:
+            break
+        t = rng.choice(topics)
+        a, b = rng.sample(by_topic[t], 2) if len(by_topic[t]) > 1 else (None, None)
+        if not a or a["doc_id"] == b["doc_id"]:
+            continue
+        key = tuple(sorted((a["doc_id"], b["doc_id"]))) + (t,)
+        if key not in seen:
+            seen.add(key)
+            pairs.append((a, b))
+    return pairs
+
+
+def draft_comparison(pair):
+    a, b = pair
+    r = _llm(DRAFT_MODEL, DRAFT_MULTI.format(
+        title_a=a["title"], head_a=a["head"], text_a=a["text"],
+        title_b=b["title"], head_b=b["head"], text_b=b["text"]).replace(
+        "(for example a comparison, or a combination of two facts)",
+        "(a comparison between the two countries or entities, as an employee deciding between them or moving between them would ask)"))
+    if r.get("skip") or not r.get("question"):
+        return None, "draft skipped"
+    if evidence_overlap(r.get("evidence_a", ""), a["text"]) < 0.8 or evidence_overlap(r.get("evidence_b", ""), b["text"]) < 0.8:
+        return None, "evidence not verbatim"
+    item = {"type": "multi_hop", "question": r["question"].strip(), "answer": r.get("answer", "").strip(),
+            "evidence": [{"doc_id": a["doc_id"], "quote": r["evidence_a"].strip()},
+                         {"doc_id": b["doc_id"], "quote": r["evidence_b"].strip()}], "source": [a, b]}
+    source = f"[{a['title']} > {a['head']}]\n{a['text']}\n\n[{b['title']} > {b['head']}]\n{b['text']}"
+    v = _llm(CHECK_MODEL, CHECK_NATURAL.format(source=source, question=item["question"], answer=item["answer"]), max_tokens=800)
+    item["check"] = v
+    if not all(v.get(k) for k in ("self_contained", "supported", "specific", "natural")):
+        return None, f"check failed: {v.get('reason', v)}"
+    return item, None
+
+
+def rebuild_multihop(n_drafts: int = 32) -> int:
+    """Replace the multi-hop items with cross-country comparison questions."""
+    rng = random.Random(SEED + 1)
+    docs = load_corpus("data/corpus")
+    pairs = comparison_pairs(docs, rng, n_drafts)
+    new, rejected = [], []
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        for item, why in pool.map(lambda p: _safe(draft_comparison, p), pairs):
+            (new.append(item) if item else rejected.append({"kind": "multi_v2", "reason": why}))
+    new = _dedupe(new)[:TARGET["multi_hop"]]
+    full = [json.loads(l) for l in (AUDIT / "kept_full.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    old_multi = [x for x in full if x["type"] == "multi_hop"]
+    keep = [x for x in full if x["type"] != "multi_hop"]
+    final = [x for x in keep if x["type"] != "unanswerable"] + new + [x for x in keep if x["type"] == "unanswerable"]
+    for i, it in enumerate(final):
+        it["id"] = f"q{i + 1:03d}"
+    with OUT.open("w", encoding="utf-8") as f:
+        for it in final:
+            f.write(json.dumps({k: it[k] for k in ("id", "type", "question", "answer", "evidence")}, ensure_ascii=False) + "\n")
+    (AUDIT / "kept_full.jsonl").write_text("".join(json.dumps(it, ensure_ascii=False) + "\n" for it in final), encoding="utf-8")
+    (AUDIT / "multihop_v1_replaced.jsonl").write_text(
+        "".join(json.dumps(it, ensure_ascii=False) + "\n" for it in old_multi), encoding="utf-8")
+    with (AUDIT / "rejected.jsonl").open("a", encoding="utf-8") as f:
+        f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in rejected)
+    s = json.loads((AUDIT / "summary.json").read_text())
+    s["multihop_v2"] = {"pairs_drafted": len(pairs), "kept": len(new),
+                        "note": "v1 multi-hop items paired unrelated sections and read unnaturally; replaced with cross-country comparisons checked for naturalness"}
+    s["final"] = len(final)
+    s["by_type"] = {t: sum(1 for x in final if x["type"] == t) for t in sorted({x["type"] for x in final})}
+    (AUDIT / "summary.json").write_text(json.dumps(s, indent=2), encoding="utf-8")
+    print(json.dumps(s["multihop_v2"] | {"final": len(final), "by_type": s["by_type"]}, indent=2))
+    return 0
+
+
+def _safe(fn, arg):
+    try:
+        return fn(arg)
+    except Exception as e:
+        return None, f"error: {e}"
+
+
 if __name__ == "__main__":
     if sys.argv[1:] == ["build"]:
         sys.exit(build())
+    if sys.argv[1:] == ["multihop"]:
+        sys.exit(rebuild_multihop())
     sys.exit(__doc__)
