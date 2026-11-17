@@ -33,6 +33,7 @@ OPENROUTER_HOSTS = {
     "qwen/qwen3.8-27b": "PrimeIntellect",
     "openai/gpt-oss-120b": "Near AI",
     "openai/gpt-oss-20b": "Near AI",
+    "google/gemma-3-27b-it": "NextBit",  # verifier; this host returns token log-probabilities
 }
 
 
@@ -155,6 +156,8 @@ def chat(model: str, messages: list[dict], *, max_tokens: int = 512, temperature
     out = {"content": data["choices"][0]["message"].get("content") or "",
            "usage": data.get("usage", {}), "latency_s": round(time.time() - t0, 3),
            "host": data.get("provider")}
+    if data["choices"][0].get("logprobs"):
+        out["logprobs"] = data["choices"][0]["logprobs"]
     path.parent.mkdir(parents=True, exist_ok=True)
     # keep the exact request next to the response so anyone can audit every prompt
     path.write_text(json.dumps({**out, "request": body}, ensure_ascii=False), encoding="utf-8")
