@@ -7,11 +7,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-ORDER = ["v0_baseline", "v1_heading_chunks", "v2_hybrid", "v3_rerank", "v4_grounded_prompt"]
+ORDER = ["v0_baseline", "v1_heading_chunks", "v2_hybrid", "v3_rerank", "v4_grounded_prompt",
+         "v6_more_context", "v7_decompose"]
 COLS = [("overall", "Overall"), ("answer_accuracy", "Answer accuracy"),
         ("retrieval_recall", "Evidence recall@k"), ("faithfulness", "Faithfulness"),
         ("unanswerable_refusal", "Says \"don't know\" when it should"),
-        ("false_refusal_rate", "Refuses answerable")]
+        ("false_refusal_rate", "Refuses answerable"), ("multi_hop", "Multi-hop")]
 
 
 def pct(stat: dict) -> str:
@@ -21,6 +22,10 @@ def pct(stat: dict) -> str:
     return f"{stat['value'] * 100:.0f}% <sub>({lo * 100:.0f}–{hi * 100:.0f})</sub>"
 
 
+def stat(m: dict, key: str) -> dict | None:
+    return m.get(key) or m.get("by_type", {}).get(key)
+
+
 def main() -> None:
     runs = [json.loads((Path("results") / r / "metrics.json").read_text())
             for r in ORDER if (Path("results") / r / "metrics.json").exists()]
@@ -28,7 +33,7 @@ def main() -> None:
              "|---|---|" + "---|" * len(COLS)]
     for m in runs:
         cfg = m["config"]
-        lines.append(f"| `{cfg['name']}` | {cfg['description']} | " + " | ".join(pct(m.get(k)) for k, _ in COLS) + " |")
+        lines.append(f"| `{cfg['name']}` | {cfg['description']} | " + " | ".join(pct(stat(m, k)) for k, _ in COLS) + " |")
     if runs:
         n = runs[0]["overall"]["n"]
         lines.append(f"\n{n} questions. 95% bootstrap confidence intervals in brackets. "
