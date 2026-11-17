@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import random
 import re
 import time
 import urllib.error
@@ -81,7 +82,7 @@ def chat(model: str, messages: list[dict], *, max_tokens: int = 512, temperature
         return out
 
     need = sum(len(m["content"]) for m in messages) // 3 + max_tokens
-    for attempt in range(8):
+    for attempt in range(20):  # per-minute limits clear quickly; daily limits raise above
         _budget.wait(model, need)
         req = urllib.request.Request(
             BASE_URL + "/chat/completions", data=json.dumps(body).encode(), method="POST",
@@ -98,7 +99,7 @@ def chat(model: str, messages: list[dict], *, max_tokens: int = 512, temperature
             if e.code == 429:
                 if re.search(r"per day|TPD|RPD", msg):
                     raise DailyLimitReached(f"{model}: {msg[:200]}")
-                time.sleep(_seconds(e.headers.get("retry-after")) or 2 ** attempt)
+                time.sleep((_seconds(e.headers.get("retry-after")) or min(60, 2 ** attempt)) + random.uniform(0, 2))
                 continue
             if e.code >= 500:
                 time.sleep(2 ** attempt)
