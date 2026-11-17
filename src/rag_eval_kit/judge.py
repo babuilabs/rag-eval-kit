@@ -24,11 +24,12 @@ Assistant's answer:
 {answer}
 \"\"\"
 
-Grade three things:
+First write one sentence of reasoning, then grade three things:
 - correctness: "correct" if the answer states the key information in the reference answer without contradicting it (extra correct detail is fine); "partial" if it gets part of it or is vague; "incorrect" if it is wrong, contradicts the reference, or does not answer.
-- refused: true if the assistant declined or said it does not know.
+- refused: true if the assistant declined or said it does not know, instead of answering.
 - faithful: true if every factual claim in the answer is supported by the passages above (ignore whether it matches the reference). An answer that only refuses counts as faithful.
-Return JSON: {{"correctness": "correct" | "partial" | "incorrect", "refused": true/false, "faithful": true/false, "reason": "one sentence"}}"""
+The grades must agree with your reasoning.
+Return JSON with the reasoning first: {{"reason": "one sentence", "correctness": "correct" | "partial" | "incorrect", "refused": true/false, "faithful": true/false}}"""
 
 UNANSWERABLE = """You are grading an AI assistant on a question that the company handbook does NOT answer.
 The ideal response says the information is not available (it may suggest who to ask) and does not invent an answer.
@@ -45,9 +46,11 @@ Assistant's answer:
 {answer}
 \"\"\"
 
-- refused: true if the assistant clearly says it does not know / the information is not provided, without giving a made-up specific answer.
+First write one sentence of reasoning, then grade:
+- refused: true if the assistant says the information is not available and does not give a specific answer to the question. Describing what the passages do cover, or suggesting who to ask, still counts as refused. False if it answers the question, even partly or by inference.
 - faithful: true if every factual claim in the answer is supported by the passages above.
-Return JSON: {{"refused": true/false, "faithful": true/false, "reason": "one sentence"}}"""
+The grades must agree with your reasoning.
+Return JSON with the reasoning first: {{"reason": "one sentence", "refused": true/false, "faithful": true/false}}"""
 
 
 def judge(item: dict, answer: str, context: str) -> dict:
