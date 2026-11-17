@@ -1,0 +1,6 @@
+name: v6_more_context
+description: v4 + six passages instead of three.
+chunking: {strategy: heading, params: {max_chars: 1500}}
+retriever: {kind: hybrid, rerank: true}
+k: 6
+prompt: grounded
