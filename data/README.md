@@ -3,7 +3,7 @@
 ## Corpus
 
 A pinned slice of the [GitLab Handbook](https://handbook.gitlab.com): benefits, compensation,
-time off, people policies, onboarding/offboarding, travel and expenses (95 pages, listed in
+time off, people policies, onboarding/offboarding, travel and expenses (94 pages, listed in
 `corpus_manifest.txt`). It reads like a real company's internal knowledge base, which is
 exactly what most RAG assistants are built on.
 

@@ -51,7 +51,6 @@ people-group/promotions-transfers.md
 people-group/pronouns.md
 people-group/quarterly-talent-review.md
 people-group/relocation.md
-people-group/talent-assessment.md
 people-group/talent-development-program.md
 people-group/team-member-relations.md
 people-group/time-off-and-absence/_index.md
