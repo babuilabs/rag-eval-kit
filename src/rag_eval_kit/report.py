@@ -215,8 +215,8 @@ def _bubble(who: str, cls: str, text: str, verdict: str = "") -> str:
     return f'<div class="bubble {cls}"><span class="who">{who}</span><p>{text}</p>{v}</div>'
 
 
-def _examples(before: list[dict], after: list[dict]) -> str:
-    """Three real questions as short chats. Full answers sit behind a toggle."""
+def _examples(before: list[dict], after: list[dict], k: int = 3) -> str:
+    """A few real questions as short chats. Full answers sit behind a toggle."""
     a, b = {r["id"]: r for r in before}, {r["id"]: r for r in after}
     ids = [i for i in CARD_IDS if i in a and i in b and a[i]["score"] < 1 <= b[i]["score"] and i not in WEAK]
     for r in before:  # fall back to the first fixed question of another type
@@ -227,7 +227,7 @@ def _examples(before: list[dict], after: list[dict]) -> str:
                 and x["score"] == 1 and r["type"] not in {a[i]["type"] for i in ids} | {"unanswerable"}:
             ids.append(r["id"])
     cards = []
-    for i in ids[:3]:
+    for i in ids[:k]:
         r, x = a[i], b[i]
         ref = _clean(r["reference"]) or "Not in the handbook, so the right reply is “I don’t know”."
         bad = "Made up" if r["type"] == "unanswerable" else "Gave up" if r["verdict"].get("refused") else "Wrong"
@@ -299,9 +299,24 @@ nav{position:relative;display:flex;align-items:center;justify-content:space-betw
 .dots{display:grid;grid-template-columns:repeat(13,1fr);gap:clamp(5px,1vw,9px)}
 .dot{aspect-ratio:1;border-radius:50%;background:var(--idk);border:0;padding:0;cursor:pointer;transition:background-color .5s ease,transform .5s ease}
 .dot:hover,.dot:focus-visible{transform:scale(1.3);outline:2px solid var(--fg);outline-offset:1px}
-.dot.right{background:var(--good)}.dot.partial{background:var(--mid)}.dot.wrong{background:var(--bad)}.dot.idk{background:var(--idk);box-shadow:inset 0 0 0 1px var(--dim)}
+.dot.right{background:var(--good)}.dot.partial{background:var(--idk);box-shadow:inset 0 0 0 1px var(--dim)}.dot.wrong{background:var(--bad)}.dot.idk{background:var(--idk);box-shadow:inset 0 0 0 1px var(--dim)}
 .dot.flip{animation:pop .5s ease}@keyframes pop{50%{transform:scale(1.4)}}
 .legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.82rem;color:var(--muted);margin-top:16px}.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.headline .hl-label{font-size:1.05rem;margin:0}.headline .hl-sub{color:var(--muted);margin:6px 0 0}
+.hl-num{display:flex;align-items:baseline;gap:18px;margin:10px 0 0;font:600 clamp(3.5rem,9vw,6rem)/1 var(--serif)}
+.hl-num .from{color:var(--bad)}.hl-num .to{color:var(--good)}.hl-num .arrow{color:var(--dim);font-size:.5em}
+.cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px}
+.cards4>div{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:22px}.cards4 .star{border-color:var(--accent)}
+.cards4 .n{font:600 .8rem/1 var(--sans);color:var(--accent)}.cards4 h3{font-size:1.25rem;line-height:1.2;margin:14px 0 10px}.cards4 p{margin:0;color:var(--muted);font-size:.95rem}
+.more-link{margin-top:22px}.more-link a{color:var(--accent);text-decoration:none;font-weight:600}
+.flowpic{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1.3fr;align-items:center;gap:8px;margin-top:44px}
+.flowpic>i{height:2px;background:var(--dim);position:relative}.flowpic>i::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid var(--dim)}
+.fp-step{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:18px;font-size:1rem;min-height:104px}
+.fp-step span{display:block;font:600 .8rem/1 var(--sans);color:var(--accent);margin-bottom:10px}.fp-step.key{border-color:var(--accent)}
+.fp-out{display:grid;gap:10px}.fp-out div{border-radius:14px;padding:14px 16px;font-size:.95rem}
+.fp-out .ok{background:rgba(127,214,180,.08);border:1px solid rgba(127,214,180,.35)}.fp-out .team{background:rgba(227,180,85,.08);border:1px solid rgba(227,180,85,.4)}
+.net-result{font-size:1.1rem;margin:34px 0 0;max-width:720px;color:var(--muted)}.net-result b{color:var(--fg);font-weight:600}
+.chats.two{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
 .tally{display:grid;gap:22px}.tally div{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:baseline}
 .tally b{font:600 clamp(2.6rem,6vw,3.6rem)/1 var(--serif);font-variant-numeric:tabular-nums;min-width:2.2ch;text-align:right}
 .tally span{font-size:1.02rem}.tally small{grid-column:2;color:var(--muted);font-size:.85rem}
@@ -368,8 +383,9 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;padd
 .js .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}.js .reveal.in{opacity:1;transform:none}
 @media (max-width:860px){.hero-grid,.ba-grid{grid-template-columns:1fr}.phone{margin:0 auto}.stage .bigmark{display:none}.navlinks a.hide-m{display:none}
 .jrow,.jhead{grid-template-columns:34px minmax(0,1fr) 74px}.jrow .jbar{grid-column:2/4;grid-row:2}.jhead span:nth-child(3){display:none}
-.flow{grid-template-columns:1fr 1fr}.of100{grid-template-columns:1fr 1fr}.steps3{grid-template-columns:1fr}.cta{grid-template-columns:1fr}.pair{grid-template-columns:1fr}
+.cards4{grid-template-columns:1fr 1fr}.flowpic{grid-template-columns:1fr}.flowpic>i{width:2px;height:20px;margin:0 auto}.flowpic>i::after{right:-4px;top:auto;bottom:-6px;border:5px solid transparent;border-top:7px solid var(--dim)}.fp-step{min-height:0}.of100{grid-template-columns:1fr 1fr}.steps3{grid-template-columns:1fr}.cta{grid-template-columns:1fr}.pair{grid-template-columns:1fr}
 .qitem summary{grid-template-columns:1fr}.badges{flex-wrap:wrap}.hero{min-height:0}}
+@media (max-width:520px){.cards4{grid-template-columns:1fr}.hl-num{font-size:3.4rem}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .anim .phone>*,.js .anim .stamp,.js .reveal{opacity:1;transform:none}.js .anim .stamp{transform:rotate(6deg)}.js .pre .jbar i{width:var(--w)}html{scroll-behavior:auto}}
 """
 
@@ -383,6 +399,10 @@ def main() -> None:
     n_q = len(first[2])
     hb, ha = ({r["id"]: r for r in rows}[HERO_ID] for rows in (first[2], last[2]))
     gate = gate_grid(last[0])
+    bad0, bad1 = (sum(_state(r) == "wrong" for r in rows) for rows in (first[2], last[2]))
+    g3 = gate["grid"]["0.03"]
+    gw0, gw1 = f'{gate["no_gate"]["wrong"] * 100:.1f}', f'{g3["wrong"] * 100:.1f}'
+    held_n = round(1 / (gate["no_gate"]["answered"] - g3["answered"]))
     data = explorer_data(runs)
     mark = lambda k: MARK.replace("{k}", k)
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -421,50 +441,51 @@ def main() -> None:
 <section id="results"><div class="wrap">
 <p class="kicker reveal">The whole test at a glance</p>
 <h2 class="reveal">Same {n_q} questions. Before and after.</h2>
-<p class="lede reveal">Each dot is one question. Switch between the chatbot as most tutorials build it and the version after our fixes.</p>
+<p class="lede reveal">Each dot is one real question. Switch between the chatbot as tutorials build it and the same chatbot after our fixes.</p>
 <div class="ba-grid">
 <div class="reveal"><div class="toggle" role="group" aria-label="Which chatbot"><button type="button" id="show-before">Before</button><button type="button" id="show-after">After our fixes</button></div>
 <div class="dots" id="dots" role="img" aria-label="{n_q} test questions, coloured by how the chatbot answered"></div>
-<div class="legend"><span><i style="background:var(--good)"></i>right</span><span><i style="background:var(--mid)"></i>partly right</span>
-<span><i style="background:var(--bad)"></i>wrong or made up</span><span><i style="background:var(--idk);box-shadow:inset 0 0 0 1px var(--dim)"></i>said “I don’t know” but could have answered</span></div></div>
-<div class="tally reveal">
-<div class="t-right"><b id="t-right">0</b><span>answered right</span><small>including saying “I don’t know” when the handbook has no answer</small></div>
-<div class="t-wrong"><b id="t-wrong">0</b><span>wrong or made up</span><small>the answers that cost you customers</small></div>
-<div class="t-idk"><b id="t-idk">0</b><span>gave up too early</span><small>the answer was in the documents</small></div>
+<div class="legend"><span><i style="background:var(--good)"></i>right</span><span><i style="background:var(--bad)"></i>wrong or made up</span>
+<span><i style="background:var(--idk);box-shadow:inset 0 0 0 1px var(--dim)"></i>partly right, or gave up</span></div></div>
+<div class="headline reveal"><p class="hl-label">Wrong or made-up answers</p>
+<p class="hl-num"><span class="from">{bad0}</span><span class="arrow">→</span><span class="to">{bad1}</span></p>
+<p class="hl-sub">out of the same {n_q} questions</p>
 <p class="hint">Click any dot to read that question and both answers.</p>
 </div></div></div></section>
 
 <section><div class="wrap">
 <p class="kicker reveal">What we changed</p>
-<h2 class="reveal">{WORDS.get(len(runs) - 1, len(runs) - 1)} small changes. Each one measured.</h2>
-<p class="lede reveal">We changed one thing at a time and checked the result before moving on. When an idea made things worse, we say so.</p>
-<div class="jhead" aria-hidden="true"><span></span><span>Change</span><span>How the {n_q} answers split</span><span>Wrong answers</span></div>
-<ol class="journey pre" id="journey">{_journey(runs)}</ol>
-<div class="legend"><span><i style="background:var(--good)"></i>right</span><span><i style="background:var(--mid)"></i>partly right</span>
-<span><i style="background:var(--idk);box-shadow:inset 0 0 0 1px var(--dim)"></i>gave up too early</span><span><i style="background:var(--bad)"></i>wrong or made up</span></div>
-<p class="after-note reveal">The biggest single win was teaching it to cite the handbook and to say “I don’t know”. The last two steps get more questions right; a few more errors slip through, which is what the safety net below is for.</p>
+<h2 class="reveal">Small changes, each one measured.</h2>
+<p class="lede reveal">We changed one thing at a time and kept only what helped.</p>
+<div class="cards4 reveal">
+<div><span class="n">01</span><h3>Split documents by topic</h3><p>Instead of every 1,000 characters. Wrong answers halved.</p></div>
+<div><span class="n">02</span><h3>Tried better search</h3><p>Keyword search on its own made things worse. We measured it, said so, and a re-ranker fixed it.</p></div>
+<div class="star"><span class="n">03</span><h3>Taught it to cite, and to say “I don’t know”</h3><p>The biggest single win. It stopped inventing answers.</p></div>
+<div><span class="n">04</span><h3>Broke hard questions into simple searches</h3><p>Comparison questions went from mostly wrong to mostly right.</p></div>
+</div>
+<p class="more-link reveal"><a href="#steps-detail" onclick="document.getElementById('steps-detail').open=true">Every step, with numbers ↓</a></p>
 </div></section>
 
 <section><div class="wrap">
 <p class="kicker reveal">Optional safety net</p>
 <h2 class="reveal">Doubtful answers go to a person, <em>not</em> your customer.</h2>
-<p class="lede reveal">A separate checker reads every answer against the handbook before it is shown. You decide how strict it is.</p>
-<div class="net-box reveal">
-<div class="flow"><span>Question</span><span>Chatbot answers</span><span class="key">Checker reads the sources</span><span>Shown, or sent to your team</span></div>
-<div class="slider"><label for="alpha">Allow at most this many wrong answers <output id="alpha-out">3%</output></label>
-<input type="range" id="alpha" min="0.02" max="0.08" step="0.005" value="0.03"><div class="ends"><span>stricter: more go to your team</span><span>looser: more answered directly</span></div></div>
-<div class="bar100" id="bar100"><i class="b-right"></i><i class="b-wrong"></i><i class="b-held"></i><i class="b-idk"></i></div>
-<p style="margin:0 0 14px">Out of every 100 questions:</p>
-<div class="of100"><div class="o-right"><b id="o-right"></b><span>answered correctly</span></div><div class="o-wrong"><b id="o-wrong"></b><span>shown, not fully right</span></div>
-<div class="o-held"><b id="o-held"></b><span>sent to your team</span></div><div class="o-idk"><b id="o-idk"></b><span>“I don’t know”</span></div></div>
-<p class="fine" id="g-base"></p>
-</div></div></section>
+<p class="lede reveal">A separate checker reads every answer against the handbook before your customer sees it.</p>
+<div class="flowpic reveal" role="img" aria-label="Question, then the chatbot drafts an answer, then a checker compares it with the sources; supported answers are shown, doubtful ones go to your team">
+<div class="fp-step"><span>1</span>Customer asks</div><i></i>
+<div class="fp-step"><span>2</span>Chatbot drafts an answer</div><i></i>
+<div class="fp-step key"><span>3</span>Checker compares it with the sources</div><i></i>
+<div class="fp-out"><div class="ok">✓ Supported: shown to the customer</div><div class="team">↪ Doubtful: sent to your team</div></div>
+</div>
+<p class="net-result reveal">On this test, wrong answers shown fell from <b>{gw0} to {gw1} in 100</b>. The cost: about <b>1 in {held_n}</b> answers waits for a person instead.</p>
+</div></section>
+
+
 
 <section><div class="wrap">
 <p class="kicker reveal">Real answers</p>
 <h2 class="reveal">What the difference looks like</h2>
 <p class="lede reveal">Questions the original chatbot got wrong and the fixed one got right, word for word.</p>
-<div class="chats reveal">{_examples(first[2], last[2])}</div>
+<div class="chats two reveal">{_examples(first[2], last[2], 2)}</div>
 </div></section>
 
 <section id="how"><div class="wrap">
@@ -493,6 +514,24 @@ def main() -> None:
 <label>Search<input id="search" type="search" placeholder="leave, pension, q076…"></label>
 </div>
 <p class="count" id="count"></p><div class="qlist" id="qlist"></div><button type="button" class="more" id="more">Show more</button>
+</div></details>
+
+<details class="layer" id="steps-detail"><summary>Every step, with numbers<span>how the {n_q} answers split after each change</span></summary><div>
+<div class="jhead" aria-hidden="true"><span></span><span>Change</span><span>How the {n_q} answers split</span><span>Wrong answers</span></div>
+<ol class="journey pre" id="journey">{_journey(runs)}</ol>
+<div class="legend"><span><i style="background:var(--good)"></i>right</span><span><i style="background:var(--mid)"></i>partly right</span>
+<span><i style="background:var(--idk);box-shadow:inset 0 0 0 1px var(--dim)"></i>gave up too early</span><span><i style="background:var(--bad)"></i>wrong or made up</span></div>
+<p class="note">Wrong answers per 100 count a partly right answer as half. The last two steps get more questions right; a few more errors slip through, which the safety net is for.</p>
+</div></details>
+
+<details class="layer"><summary>Try the safety net yourself<span>choose how strict the checker is</span></summary><div class="net-box">
+<div class="slider"><label for="alpha">Allow at most this many wrong answers <output id="alpha-out">3%</output></label>
+<input type="range" id="alpha" min="0.02" max="0.08" step="0.005" value="0.03"><div class="ends"><span>stricter: more go to your team</span><span>looser: more answered directly</span></div></div>
+<div class="bar100" id="bar100"><i class="b-right"></i><i class="b-wrong"></i><i class="b-held"></i><i class="b-idk"></i></div>
+<p style="margin:0 0 14px">Out of every 100 questions:</p>
+<div class="of100"><div class="o-right"><b id="o-right"></b><span>answered correctly</span></div><div class="o-wrong"><b id="o-wrong"></b><span>shown, not fully right</span></div>
+<div class="o-held"><b id="o-held"></b><span>sent to your team</span></div><div class="o-idk"><b id="o-idk"></b><span>“I don’t know”</span></div></div>
+<p class="note" id="g-base"></p>
 </div></details>
 
 <details class="layer"><summary>All metrics with confidence intervals<span>7 versions × 9 measures</span></summary><div>

@@ -25,21 +25,6 @@ document.querySelectorAll('.reveal').forEach(n => calm ? n.classList.add('in') :
 onView($('#journey'), () => $('#journey').classList.remove('pre'));
 onView($('.phone'), () => $('.hero').classList.add('play'), '0px 0px -25% 0px');
 
-function count(node, to) {
-  const from = +node.textContent || 0;
-  node.dataset.to = to;
-  if (calm || from === to || document.hidden) { node.textContent = to; return; }
-  const t0 = performance.now();
-  const tick = t => {
-    if (+node.dataset.to !== to) return;  // a newer count took over
-    const k = Math.min((t - t0) / 700, 1); node.textContent = Math.round(from + (to - from) * k);
-    if (k < 1) requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
-  // Animation frames pause in background tabs; make sure the final number always lands.
-  setTimeout(() => { if (+node.dataset.to === to) node.textContent = to; }, 800);
-}
-
 // ---- Before / after dots
 const dots = Qs.map(q => {
   const d = el('button', 'dot'); d.type = 'button'; d.title = q.q;
@@ -54,9 +39,6 @@ function show(v) {
     const go = () => { d.className = c; if (!calm) { d.classList.add('flip'); setTimeout(() => d.classList.remove('flip'), 520); } };
     calm ? go() : setTimeout(go, i * 7);
   });
-  count($('#t-right'), cls.filter(c => c === 'right').length);
-  count($('#t-wrong'), cls.filter(c => c === 'wrong').length);
-  count($('#t-idk'), cls.filter(c => c === 'idk').length);
   $('#show-before').setAttribute('aria-pressed', v === FIRST);
   $('#show-after').setAttribute('aria-pressed', v === LAST);
 }
