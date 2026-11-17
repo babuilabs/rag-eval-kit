@@ -21,6 +21,8 @@ WEAK = {"q018", "q022", "q025", "q056", "q068", "q070", "q078", "q081", "q088", 
 OUT = Path("docs/index.html")
 JS = Path(__file__).with_name("report.js")
 CONTACT = "https://github.com/babuilabs"
+EMAIL = "aforapple683@gmail.com"
+MAILTO = f"mailto:{EMAIL}?subject=Chatbot%20audit%20enquiry"
 REPO = "https://github.com/babuilabs/rag-eval-kit"
 
 # Each step in words a non-specialist can follow. The technical names live in the "Go deeper" layer.
@@ -356,7 +358,7 @@ nav{position:relative;display:flex;align-items:center;justify-content:space-betw
 .steps3 div{counter-increment:s;padding-top:20px;border-top:2px solid var(--accent)}.steps3 div::before{content:"0" counter(s);font:600 .85rem/1 var(--sans);color:var(--accent);display:block;margin-bottom:14px}
 .steps3 h3{font-size:1.5rem;margin-bottom:8px}.steps3 p{margin:0;color:var(--muted)}
 .cta{margin-top:clamp(56px,8vw,88px);background:var(--bg2);border:1px solid rgba(227,180,85,.35);border-radius:28px;padding:clamp(32px,6vw,64px);display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center}
-.cta svg{width:72px;height:84px}.cta h2{font-size:clamp(1.6rem,3.5vw,2.3rem)}.cta p{margin:8px 0 0;color:var(--muted)}
+.cta svg{width:72px;height:84px}.cta h2{font-size:clamp(1.6rem,3.5vw,2.3rem)}.cta p{margin:8px 0 0;color:var(--muted)}.cta .mail{font-size:.9rem}.cta .mail a{color:var(--accent)}
 /* go deeper */
 .deep h2{font-size:clamp(1.4rem,3vw,1.9rem)}.deep .layers{margin-top:28px}.layer{background:var(--bg2);border:1px solid var(--line);border-radius:14px;margin-top:12px}
 .layer>summary{padding:18px 20px;font-size:1rem;font-weight:600;color:var(--fg);list-style:none;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;cursor:pointer}
@@ -496,8 +498,9 @@ def main() -> None:
 <div><h3>Fix</h3><p>Search, document splitting, prompts: one change at a time. We keep only what moves the number.</p></div>
 <div><h3>Prove</h3><p>You get a report like this one, every answer included, plus an optional safety net for what remains.</p></div>
 </div>
-<div class="cta reveal" id="contact">{mark("c")}<div><h2>Is your chatbot making things up?</h2><p>Let’s measure it. You’ll know where it stands before you spend anything on fixes.</p></div>
-<a class="btn primary" href="{CONTACT}">Talk to Babui Labs</a></div>
+<div class="cta reveal" id="contact">{mark("c")}<div><h2>Is your chatbot making things up?</h2><p>Let’s measure it. You’ll know where it stands before you spend anything on fixes.</p>
+<p class="mail">Or write to <a href="{MAILTO}">{EMAIL}</a></p></div>
+<a class="btn primary" href="{MAILTO}">Talk to Babui Labs</a></div>
 </div></section>
 
 <section class="deep"><div class="wrap">
