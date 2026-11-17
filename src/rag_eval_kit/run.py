@@ -30,6 +30,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("config")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--generate-only", action="store_true",
+                    help="only produce (and cache) answers; judge later. Useful under daily token caps")
     args = ap.parse_args()
     cfg = yaml.safe_load(Path(args.config).read_text())
     items = load_evalset()[: args.limit]
@@ -47,6 +49,8 @@ def main() -> None:
         idx = [i for i, _ in hits[it["id"]]]
         texts = [chunks[i].text for i in idx]
         gen = answer(it["question"], texts, cfg["prompt"])
+        if args.generate_only:
+            return None
         verdict = judge(it, gen["answer"], "\n\n".join(texts))
         return {
             "id": it["id"], "type": it["type"], "question": it["question"], "reference": it["answer"],
@@ -62,6 +66,9 @@ def main() -> None:
             rows.append(row)
             if n % 20 == 0:
                 print(f"  {n}/{len(items)}", flush=True)
+    if args.generate_only:
+        print(f"{cfg['name']}: {len(items)} answers generated and cached", flush=True)
+        return
 
     out = Path("results") / cfg["name"]
     out.mkdir(parents=True, exist_ok=True)
