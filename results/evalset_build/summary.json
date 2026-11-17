@@ -1,0 +1,25 @@
+{
+  "drafted": 170,
+  "passed_checks": 115,
+  "final": 116,
+  "by_type": {
+    "fact": 29,
+    "multi_hop": 20,
+    "numeric": 15,
+    "paraphrase": 27,
+    "unanswerable": 25
+  },
+  "rejections": {
+    "corpus can answer it (yes)": 6,
+    "draft skipped": 13,
+    "check failed": 5,
+    "evidence not verbatim": 16,
+    "corpus can answer it (partially)": 3,
+    "error": 12
+  },
+  "multihop_v2": {
+    "pairs_drafted": 32,
+    "kept": 20,
+    "note": "v1 multi-hop items paired unrelated sections and read unnaturally; replaced with cross-country comparisons checked for naturalness"
+  }
+}

@@ -1,0 +1,66 @@
+{"kind": "unans", "reason": "corpus can answer it (yes): The charter states team members can contact Team Member Relations (French HR) directly for concerns, without requiring reporting to a local office."}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "multi", "reason": "check failed: The source describes relocation steps but does not explicitly state that the change management framework supports those steps, so the answer isn’t fully supported."}
+{"kind": "multi", "reason": "evidence not verbatim"}
+{"kind": "multi", "reason": "evidence not verbatim"}
+{"kind": "multi", "reason": "evidence not verbatim"}
+{"kind": "unans", "reason": "corpus can answer it (partially): The passages describe general RSU vesting timelines but do not specify a schedule unique to Canadian employees."}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "multi", "reason": "evidence not verbatim"}
+{"kind": "unans", "reason": "corpus can answer it (yes): The handbook states equity refresh budgets are held at Director level or higher, and Senior Directors can act as equity planners when teams are small, so the question can be answered."}
+{"kind": "unans", "reason": "error: openai/gpt-oss-120b: gave up after retries"}
+{"kind": "unans", "reason": "error: openai/gpt-oss-120b: gave up after retries"}
+{"kind": "unans", "reason": "error: openai/gpt-oss-120b: gave up after retries"}
+{"kind": "multi", "reason": "evidence not verbatim"}
+{"kind": "unans", "reason": "error: openai/gpt-oss-120b: gave up after retries"}
+{"kind": "single", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "single", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "multi", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "single", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "single", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "single", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "unans", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "single", "reason": "error: openai/gpt-oss-20b: gave up after retries"}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "multi", "reason": "evidence not verbatim"}
+{"kind": "multi", "reason": "check failed: The source confirms tax‑free status for coaching in Italy but does not support that costs for non‑SoundingBoard vendors can be charged directly to the cost center."}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "unans", "reason": "corpus can answer it (yes): The passages specify Dependent Care FSA covers only children, disabled spouses, or parents, so it cannot be used for pet veterinary expenses."}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "unans", "reason": "corpus can answer it (yes): The handbook specifies that all nominations go through the People Communications & Engagement DRI via the standard form, with no alternative local portal mentioned."}
+{"kind": "unans", "reason": "corpus can answer it (partially): The policy outlines general expectations and exceptions for urgent communications but does not specify whether an Irish team member must wait until the next working day on a public holiday."}
+{"kind": "multi", "reason": "check failed: The source does not state that any Swedish benefit administered by Remote is also a company‑wide GitLab benefit, making the reference answer unsupported and the question ambiguous."}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "unans", "reason": "corpus can answer it (partially): The passages detail offboarding and auto‑response setup but do not provide GDPR‑specific guidance for handling the shared account."}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "multi", "reason": "check failed: The source lists visas but does not link any to non‑binary identity, so the answer is not supported and the question lacks a single specific answer."}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "unans", "reason": "corpus can answer it (yes): The passages specify a 16‑week paid parental leave in the UK, which equals 112 days, allowing the question to be answered."}
+{"kind": "single", "reason": "check failed: The source does not list the equity award types, so the answer is not fully supported or specific."}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "single", "reason": "evidence not verbatim"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "single", "reason": "draft skipped"}
+{"kind": "unans", "reason": "corpus can answer it (yes): The passages specify maternity leave is for team members giving birth, so a non-birth parent cannot take it and instead has separate paternity leave entitlement."}
+{"kind": "multi", "reason": "evidence not verbatim"}
+{"kind": "multi_v2", "reason": "check failed: The reference answer incorrectly adds Belgium's 10 holidays to the UK’s 28‑day entitlement, which is not supported by the source."}
+{"kind": "multi_v2", "reason": "evidence not verbatim"}
+{"kind": "multi_v2", "reason": "evidence not verbatim"}
+{"kind": "multi_v2", "reason": "evidence not verbatim"}
+{"kind": "multi_v2", "reason": "evidence not verbatim"}
+{"kind": "multi_v2", "reason": "check failed: The answer adds details about salary continuation in New Zealand that are not stated in the source text."}
+{"kind": "multi_v2", "reason": "check failed: The reference answer misstates the change, claiming an increase to 20 days, but the source shows a decrease from up to 25 days in Korea to 20 days in New Zealand."}
+{"kind": "multi_v2", "reason": "evidence not verbatim"}
+{"kind": "multi_v2", "reason": "check failed: The answer cites a 3% NZ rate and ESCT tax, but the UK text gives no employer contribution rate, only that none apply to bonuses, so the claim about rate difference isn’t fully supported."}
+{"kind": "multi_v2", "reason": "evidence not verbatim"}
+{"kind": "multi_v2", "reason": "evidence not verbatim"}
