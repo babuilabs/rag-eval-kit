@@ -90,3 +90,11 @@ def test_crc_threshold_answers_nothing_when_alpha_is_unreachable():
     from rag_eval_kit.gate import coverage, crc_threshold
     rows = _rows([(0.9, 0.0)] * 5)
     assert coverage(rows, crc_threshold(rows, 0.1)) == 0.0  # 1/(n+1) > alpha with n=5
+
+
+def test_merge_hits_takes_turns_and_drops_duplicates():
+    from rag_eval_kit.pipeline import merge_hits
+    a = [(1, 0.9), (2, 0.8), (3, 0.7)]
+    b = [(4, 0.9), (1, 0.5), (5, 0.4)]
+    assert [i for i, _ in merge_hits([a, b], 4)] == [1, 4, 2, 3]
+    assert [i for i, _ in merge_hits([a], 2)] == [1, 2]

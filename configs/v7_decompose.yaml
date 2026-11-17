@@ -1,0 +1,8 @@
+name: v7_decompose
+description: v6 + an LLM turns each question into searches - one per item for comparisons (3 passages each, up to 6), otherwise a single rewritten search with 6 passages.
+chunking: {strategy: heading, params: {max_chars: 1500}}
+retriever: {kind: hybrid, rerank: true}
+k: 6
+k_per_search: 3
+decompose: true
+prompt: grounded

@@ -18,7 +18,7 @@ from .chunking import chunk_corpus
 from .corpus import load_corpus
 from .judge import JUDGE_MODEL, judge
 from .metrics import question_score, retrieval_scores, summarize
-from .pipeline import GEN_MODEL, answer
+from .pipeline import GEN_MODEL, answer, decompose, merge_hits
 from .retrieval import build_retriever
 
 
@@ -43,7 +43,16 @@ def main() -> None:
     k = cfg["k"]
     print(f"{cfg['name']}: {len(chunks)} chunks, {len(items)} questions", flush=True)
 
-    hits = {it["id"]: retr.search(it["question"], k) for it in items}
+    if cfg.get("decompose"):
+        per_query = cfg.get("k_per_search", k)
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            searches = dict(zip([it["id"] for it in items], pool.map(lambda it: decompose(it["question"]), items)))
+        # A question that needs only one search keeps the full k passages.
+        hits = {it["id"]: merge_hits([retr.search(q, per_query if len(searches[it["id"]]) > 1 else k)
+                                      for q in searches[it["id"]]], k) for it in items}
+    else:
+        searches = {}
+        hits = {it["id"]: retr.search(it["question"], k) for it in items}
 
     def one(it):
         idx = [i for i, _ in hits[it["id"]]]
@@ -55,6 +64,7 @@ def main() -> None:
         return {
             "id": it["id"], "type": it["type"], "question": it["question"], "reference": it["answer"],
             "answer": gen["answer"], "retrieved": [chunks[i].chunk_id for i in idx],
+            **({"searches": searches[it["id"]]} if searches else {}),
             "retrieval": retrieval_scores(it, texts), "verdict": verdict,
             "score": question_score(it, verdict), "latency_s": gen["latency_s"],
             "prompt_tokens": gen["usage"].get("prompt_tokens", 0),
