@@ -13,8 +13,14 @@ exactly what most RAG assistants are built on.
 
 ## Evaluation set
 
-`evalset.jsonl` (added later) contains questions, reference answers and the IDs of the
-passages that contain each answer. Because it is derived from the handbook, it is shared
-under the same **CC BY-SA 4.0** license, with attribution to GitLab B.V.
+`evalset.jsonl` contains 104 questions, their reference answers and the handbook passages
+that hold each answer. Because it is derived from the handbook, it is shared under the same
+**CC BY-SA 4.0** license, with attribution to GitLab B.V.
+
+**v1.1 (104 items).** An audit of all 116 drafted items found 12 that were unsound. Four
+had wrong reference answers, two were labelled unanswerable although the handbook answers
+them, and six were not meaningful. They are kept, with the reason for each, in
+`evalset_dropped.jsonl`, so the cut can be checked. Six of the twelve were multi-hop
+items, so the multi-hop subset is now small (14) and its numbers carry wide intervals.
 
 The code in this repository is MIT licensed (see `LICENSE`).
