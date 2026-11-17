@@ -44,7 +44,9 @@ def summarize(rows: list[dict]) -> dict:
 
     def stat(vals):
         lo, hi = bootstrap_ci(vals)
-        return {"value": round(mean(vals), 4) if vals else None, "ci95": [round(lo, 4), round(hi, 4)], "n": len(vals)}
+        if not vals:
+            return {"value": None, "ci95": [None, None], "n": 0}
+        return {"value": round(mean(vals), 4), "ci95": [round(lo, 4), round(hi, 4)], "n": len(vals)}
 
     out = {
         "overall": stat([r["score"] for r in rows]),
