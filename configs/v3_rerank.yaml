@@ -1,0 +1,6 @@
+name: v3_rerank
+description: v2 + cross-encoder reranking of the top 30 candidates.
+chunking: {strategy: heading, params: {max_chars: 1500}}
+retriever: {kind: hybrid, rerank: true}
+k: 3
+prompt: basic

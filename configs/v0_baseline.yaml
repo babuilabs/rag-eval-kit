@@ -1,0 +1,6 @@
+name: v0_baseline
+description: Typical tutorial RAG. Fixed 1000-character chunks, dense retrieval, top-3, plain prompt.
+chunking: {strategy: fixed, params: {size: 1000}}
+retriever: {kind: dense, rerank: false}
+k: 3
+prompt: basic

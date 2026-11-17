@@ -1,0 +1,6 @@
+name: v1_heading_chunks
+description: v0 + chunks that follow the document's headings, each prefixed with its heading path.
+chunking: {strategy: heading, params: {max_chars: 1500}}
+retriever: {kind: dense, rerank: false}
+k: 3
+prompt: basic

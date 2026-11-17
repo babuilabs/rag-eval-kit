@@ -1,0 +1,6 @@
+name: v4_grounded_prompt
+description: v3 + a grounded prompt that cites passages and says "I don't know" when the answer is missing.
+chunking: {strategy: heading, params: {max_chars: 1500}}
+retriever: {kind: hybrid, rerank: true}
+k: 3
+prompt: grounded
