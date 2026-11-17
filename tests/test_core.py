@@ -65,3 +65,28 @@ def test_question_score():
 def test_bootstrap_ci_brackets_mean():
     lo, hi = bootstrap_ci([0, 1] * 50)
     assert lo < 0.5 < hi
+
+
+def _rows(pairs):
+    return [{"p_supported": p, "loss": l, "shown": True, "type": "fact", "verdict": {}} for p, l in pairs]
+
+
+def test_gate_risk_falls_as_threshold_rises():
+    from rag_eval_kit.gate import coverage, risk
+    rows = _rows([(0.9, 0.0), (0.8, 0.0), (0.3, 1.0), (0.2, 1.0)])
+    assert risk(rows, 0.0) == 0.5 and coverage(rows, 0.0) == 1.0
+    assert risk(rows, 0.5) == 0.0 and coverage(rows, 0.5) == 0.5
+
+
+def test_crc_threshold_meets_adjusted_risk_bound():
+    from rag_eval_kit.gate import crc_threshold, risk
+    rows = _rows([(0.95, 0.0)] * 40 + [(0.4, 1.0)] * 10)
+    tau = crc_threshold(rows, 0.1)
+    assert (len(rows) * risk(rows, tau) + 1) / (len(rows) + 1) <= 0.1
+    assert tau <= 0.95  # still answers the well-supported ones
+
+
+def test_crc_threshold_answers_nothing_when_alpha_is_unreachable():
+    from rag_eval_kit.gate import coverage, crc_threshold
+    rows = _rows([(0.9, 0.0)] * 5)
+    assert coverage(rows, crc_threshold(rows, 0.1)) == 0.0  # 1/(n+1) > alpha with n=5
