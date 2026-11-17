@@ -23,4 +23,17 @@ them, and six were not meaningful. They are kept, with the reason for each, in
 `evalset_dropped.jsonl`, so the cut can be checked. Six of the twelve were multi-hop
 items, so the multi-hop subset is now small (14) and its numbers carry wide intervals.
 
+**Kept, but weak.** These items are sound enough to keep, but a reader should know about them:
+
+- `q018`, `q070`: more than one valid answer, only one reference.
+- `q025`: "what percentage is contributed" can mean the team member's 5% or the 9% total.
+- `q068`: the rule is Australia's, but the question does not name the country.
+- `q078`, `q081`, `q090`: compare two things that do not line up, so they read unnaturally.
+- `q088`: the Australian side of the reference is hard to state cleanly.
+- `q022`, `q056`: typed as numeric but not really number questions.
+- Yes/no unanswerable items such as `q093` and `q096` ("does the handbook say X?") can fairly be
+  answered "no, it is not mentioned", which the judge may not count as a refusal.
+
+These items are never used as showcase examples in the report.
+
 The code in this repository is MIT licensed (see `LICENSE`).
