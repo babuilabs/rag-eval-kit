@@ -17,6 +17,20 @@ number each change moved.
 4. **Runs ablations.** Each fix (chunking, hybrid retrieval, reranking, prompting) is
    measured on its own, including the ones that don't help.
 
+## Run it
+
+```bash
+pip install -e ".[dev]"
+python data/download.py                              # fetch the pinned corpus (~1.7 MB)
+export LLM_API_KEY=...                               # any OpenAI-compatible endpoint; Groq by default
+python -m rag_eval_kit.run configs/v0_baseline.yaml  # answers + verdicts + metrics in results/v0_baseline/
+python -m rag_eval_kit.compare                       # side-by-side table of every finished run
+```
+
+Everything except the two LLMs runs on CPU (small ONNX embedding and reranking models).
+Model responses are cached on disk, so re-running a configuration is free and deterministic.
+Point `LLM_BASE_URL` at OpenRouter, vLLM or a local Ollama server to swap providers.
+
 ## Demo corpus
 
 A pinned slice of the public GitLab Handbook (benefits, time off, policies, expenses).
