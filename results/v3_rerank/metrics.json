@@ -1,0 +1,126 @@
+{
+  "config": {
+    "name": "v3_rerank",
+    "description": "v2 + cross-encoder reranking of the top 30 candidates.",
+    "chunking": {
+      "strategy": "heading",
+      "params": {
+        "max_chars": 1500
+      }
+    },
+    "retriever": {
+      "kind": "hybrid",
+      "rerank": true
+    },
+    "k": 3,
+    "prompt": "basic"
+  },
+  "generator": "qwen/qwen3.8-27b",
+  "judge": "openai/gpt-oss-120b",
+  "n_chunks": 1841,
+  "api": "openrouter",
+  "hosts": {
+    "qwen/qwen3.8-27b": "PrimeIntellect",
+    "openai/gpt-oss-120b": "Near AI"
+  },
+  "overall": {
+    "value": 0.8365,
+    "ci95": [
+      0.7692,
+      0.9038
+    ],
+    "n": 104
+  },
+  "answer_accuracy": {
+    "value": 0.8395,
+    "ci95": [
+      0.7593,
+      0.9074
+    ],
+    "n": 81
+  },
+  "retrieval_recall": {
+    "value": 0.8889,
+    "ci95": [
+      0.821,
+      0.9444
+    ],
+    "n": 81
+  },
+  "retrieval_mrr": {
+    "value": 0.8519,
+    "ci95": [
+      0.7819,
+      0.9156
+    ],
+    "n": 81
+  },
+  "faithfulness": {
+    "value": 0.9744,
+    "ci95": [
+      0.9359,
+      1.0
+    ],
+    "n": 78
+  },
+  "false_refusal_rate": {
+    "value": 0.0864,
+    "ci95": [
+      0.037,
+      0.1481
+    ],
+    "n": 81
+  },
+  "unanswerable_refusal": {
+    "value": 0.8261,
+    "ci95": [
+      0.6522,
+      0.9565
+    ],
+    "n": 23
+  },
+  "latency_median_s": 2.974,
+  "prompt_tokens_median": 773.5,
+  "by_type": {
+    "fact": {
+      "value": 0.963,
+      "ci95": [
+        0.8889,
+        1.0
+      ],
+      "n": 27
+    },
+    "multi_hop": {
+      "value": 0.2857,
+      "ci95": [
+        0.1071,
+        0.5
+      ],
+      "n": 14
+    },
+    "numeric": {
+      "value": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 15
+    },
+    "paraphrase": {
+      "value": 0.92,
+      "ci95": [
+        0.82,
+        1.0
+      ],
+      "n": 25
+    },
+    "unanswerable": {
+      "value": 0.8261,
+      "ci95": [
+        0.6522,
+        0.9565
+      ],
+      "n": 23
+    }
+  }
+}

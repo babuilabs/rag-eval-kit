@@ -1,0 +1,11 @@
+| Version | Change | Overall | Answer accuracy | Evidence recall@k | Faithfulness | Says "don't know" when it should | Refuses answerable | Multi-hop |
+|---|---|---|---|---|---|---|---|---|
+| `v0_baseline` | Typical tutorial RAG. Fixed 1000-character chunks, dense retrieval, top-3, plain prompt. | 71% <sub>(62–79)</sub> | 67% <sub>(57–77)</sub> | 61% <sub>(51–71)</sub> | 92% <sub>(86–97)</sub> | 83% <sub>(65–96)</sub> | 11% <sub>(5–19)</sub> | 25% <sub>(7–50)</sub> |
+| `v1_heading_chunks` | v0 + chunks that follow the document's headings, each prefixed with its heading path. | 82% <sub>(75–89)</sub> | 82% <sub>(73–90)</sub> | 86% <sub>(80–93)</sub> | 91% <sub>(84–96)</sub> | 83% <sub>(65–96)</sub> | 10% <sub>(4–17)</sub> | 43% <sub>(21–71)</sub> |
+| `v2_hybrid` | v1 + hybrid retrieval (BM25 keyword search fused with dense search). | 77% <sub>(69–85)</sub> | 78% <sub>(70–86)</sub> | 86% <sub>(80–93)</sub> | 93% <sub>(88–99)</sub> | 74% <sub>(57–91)</sub> | 14% <sub>(6–21)</sub> | 29% <sub>(7–50)</sub> |
+| `v3_rerank` | v2 + cross-encoder reranking of the top 30 candidates. | 84% <sub>(77–90)</sub> | 84% <sub>(76–91)</sub> | 89% <sub>(82–94)</sub> | 97% <sub>(94–100)</sub> | 83% <sub>(65–96)</sub> | 9% <sub>(4–15)</sub> | 29% <sub>(11–50)</sub> |
+| `v4_grounded_prompt` | v3 + a grounded prompt that cites passages and says "I don't know" when the answer is missing. | 85% <sub>(78–91)</sub> | 81% <sub>(72–89)</sub> | 89% <sub>(82–94)</sub> | 99% <sub>(96–100)</sub> | 100% <sub>(100–100)</sub> | 16% <sub>(9–25)</sub> | 25% <sub>(7–46)</sub> |
+| `v6_more_context` | v4 + six passages instead of three. | 88% <sub>(82–94)</sub> | 85% <sub>(78–92)</sub> | 91% <sub>(85–96)</sub> | 99% <sub>(96–100)</sub> | 100% <sub>(100–100)</sub> | 10% <sub>(4–16)</sub> | 46% <sub>(25–71)</sub> |
+| `v7_decompose` | v6 + an LLM turns each question into searches - one per item for comparisons (3 passages each, up to 6), otherwise a single rewritten search with 6 passages. | 90% <sub>(84–95)</sub> | 87% <sub>(80–93)</sub> | 93% <sub>(87–98)</sub> | 99% <sub>(96–100)</sub> | 100% <sub>(100–100)</sub> | 9% <sub>(2–15)</sub> | 64% <sub>(43–82)</sub> |
+
+104 questions. 95% bootstrap confidence intervals in brackets. Generator `qwen/qwen3.8-27b`, judge `openai/gpt-oss-120b`.

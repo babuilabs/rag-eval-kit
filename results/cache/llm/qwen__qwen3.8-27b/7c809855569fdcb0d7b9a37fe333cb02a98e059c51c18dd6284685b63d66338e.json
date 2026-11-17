@@ -1,0 +1,1 @@
+{"content": "Based on the provided context, specifically under section **8. Meetings**, every meeting invitation should have an **agenda linked** from the invite.", "usage": {"queue_time": 0.047690547, "prompt_tokens": 692, "prompt_time": 0.050493322, "completion_tokens": 29, "completion_time": 0.056866607, "total_tokens": 721, "total_time": 0.107359929}, "latency_s": 0.268}

@@ -1,0 +1,126 @@
+{
+  "config": {
+    "name": "v1_heading_chunks",
+    "description": "v0 + chunks that follow the document's headings, each prefixed with its heading path.",
+    "chunking": {
+      "strategy": "heading",
+      "params": {
+        "max_chars": 1500
+      }
+    },
+    "retriever": {
+      "kind": "dense",
+      "rerank": false
+    },
+    "k": 3,
+    "prompt": "basic"
+  },
+  "generator": "qwen/qwen3.8-27b",
+  "judge": "openai/gpt-oss-120b",
+  "n_chunks": 1841,
+  "api": "openrouter",
+  "hosts": {
+    "qwen/qwen3.8-27b": "PrimeIntellect",
+    "openai/gpt-oss-120b": "Near AI"
+  },
+  "overall": {
+    "value": 0.8221,
+    "ci95": [
+      0.75,
+      0.8894
+    ],
+    "n": 104
+  },
+  "answer_accuracy": {
+    "value": 0.821,
+    "ci95": [
+      0.7346,
+      0.9012
+    ],
+    "n": 81
+  },
+  "retrieval_recall": {
+    "value": 0.8642,
+    "ci95": [
+      0.7963,
+      0.9259
+    ],
+    "n": 81
+  },
+  "retrieval_mrr": {
+    "value": 0.823,
+    "ci95": [
+      0.751,
+      0.8889
+    ],
+    "n": 81
+  },
+  "faithfulness": {
+    "value": 0.9091,
+    "ci95": [
+      0.8442,
+      0.961
+    ],
+    "n": 77
+  },
+  "false_refusal_rate": {
+    "value": 0.0988,
+    "ci95": [
+      0.037,
+      0.1728
+    ],
+    "n": 81
+  },
+  "unanswerable_refusal": {
+    "value": 0.8261,
+    "ci95": [
+      0.6522,
+      0.9565
+    ],
+    "n": 23
+  },
+  "latency_median_s": 2.42,
+  "prompt_tokens_median": 694.0,
+  "by_type": {
+    "fact": {
+      "value": 0.9074,
+      "ci95": [
+        0.7963,
+        1.0
+      ],
+      "n": 27
+    },
+    "multi_hop": {
+      "value": 0.4286,
+      "ci95": [
+        0.2143,
+        0.7143
+      ],
+      "n": 14
+    },
+    "numeric": {
+      "value": 0.8667,
+      "ci95": [
+        0.6667,
+        1.0
+      ],
+      "n": 15
+    },
+    "paraphrase": {
+      "value": 0.92,
+      "ci95": [
+        0.82,
+        1.0
+      ],
+      "n": 25
+    },
+    "unanswerable": {
+      "value": 0.8261,
+      "ci95": [
+        0.6522,
+        0.9565
+      ],
+      "n": 23
+    }
+  }
+}

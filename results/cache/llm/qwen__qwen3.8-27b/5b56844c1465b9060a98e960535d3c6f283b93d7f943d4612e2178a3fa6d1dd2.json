@@ -1,0 +1,1 @@
+{"content": "According to the policy, every meeting invitation should have an **agenda linked** from it.", "usage": {"queue_time": 0.189517291, "prompt_tokens": 497, "prompt_time": 0.037701993, "completion_tokens": 19, "completion_time": 0.042762178, "total_tokens": 516, "total_time": 0.080464171}, "latency_s": 0.403}

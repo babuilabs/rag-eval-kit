@@ -1,0 +1,236 @@
+{
+  "source_run": "v7_decompose",
+  "verifier": "google/gemma-3-27b-it",
+  "n": 104,
+  "splits": 1000,
+  "no_gate": {
+    "wrong_shown": 0.0337,
+    "answered": 0.7115
+  },
+  "verifier_auroc": 0.7659313725490197,
+  "gate": {
+    "0.03": {
+      "wrong_shown_mean": 0.0181,
+      "wrong_shown_p90": 0.0481,
+      "answered_mean": 0.456,
+      "answered_right_mean": 0.4297,
+      "calibration_n": 52
+    },
+    "0.05": {
+      "wrong_shown_mean": 0.0294,
+      "wrong_shown_p90": 0.0481,
+      "answered_mean": 0.6632,
+      "answered_right_mean": 0.6139,
+      "calibration_n": 52
+    },
+    "0.1": {
+      "wrong_shown_mean": 0.0334,
+      "wrong_shown_p90": 0.0481,
+      "answered_mean": 0.7106,
+      "answered_right_mean": 0.6535,
+      "calibration_n": 52
+    }
+  },
+  "risk_coverage_curve": [
+    {
+      "tau": 0.999447,
+      "answered": 0.7115,
+      "wrong_shown": 0.0337
+    },
+    {
+      "tau": 0.999904,
+      "answered": 0.7019,
+      "wrong_shown": 0.0337
+    },
+    {
+      "tau": 0.999998,
+      "answered": 0.6923,
+      "wrong_shown": 0.0337
+    },
+    {
+      "tau": 0.999998,
+      "answered": 0.6827,
+      "wrong_shown": 0.0337
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.6731,
+      "wrong_shown": 0.0288
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.6635,
+      "wrong_shown": 0.0288
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.6538,
+      "wrong_shown": 0.024
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.6346,
+      "wrong_shown": 0.024
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.625,
+      "wrong_shown": 0.024
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.6154,
+      "wrong_shown": 0.024
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.6058,
+      "wrong_shown": 0.0192
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5962,
+      "wrong_shown": 0.0192
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5865,
+      "wrong_shown": 0.0192
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5673,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5577,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5481,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5385,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5288,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.5192,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.4904,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.4712,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.4615,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.4423,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.3942,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.375,
+      "wrong_shown": 0.0144
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.3269,
+      "wrong_shown": 0.0096
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.2788,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.2596,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.2308,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.2212,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.2019,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.1731,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.1442,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.1154,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.0962,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.0769,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.0577,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.0288,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.0192,
+      "wrong_shown": 0.0
+    },
+    {
+      "tau": 1.0,
+      "answered": 0.0096,
+      "wrong_shown": 0.0
+    }
+  ]
+}

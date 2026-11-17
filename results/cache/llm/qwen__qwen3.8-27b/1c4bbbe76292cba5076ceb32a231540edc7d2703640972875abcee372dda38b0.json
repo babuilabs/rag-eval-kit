@@ -1,0 +1,1 @@
+{"content": "At least 2 weeks", "usage": {"queue_time": 0.05081812, "prompt_tokens": 937, "prompt_time": 0.068532966, "completion_tokens": 6, "completion_time": 0.011695753, "total_tokens": 943, "total_time": 0.080228719}, "latency_s": 0.254}

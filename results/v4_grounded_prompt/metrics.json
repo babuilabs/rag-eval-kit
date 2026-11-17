@@ -1,0 +1,126 @@
+{
+  "config": {
+    "name": "v4_grounded_prompt",
+    "description": "v3 + a grounded prompt that cites passages and says \"I don't know\" when the answer is missing.",
+    "chunking": {
+      "strategy": "heading",
+      "params": {
+        "max_chars": 1500
+      }
+    },
+    "retriever": {
+      "kind": "hybrid",
+      "rerank": true
+    },
+    "k": 3,
+    "prompt": "grounded"
+  },
+  "generator": "qwen/qwen3.8-27b",
+  "judge": "openai/gpt-oss-120b",
+  "n_chunks": 1841,
+  "api": "openrouter",
+  "hosts": {
+    "qwen/qwen3.8-27b": "PrimeIntellect",
+    "openai/gpt-oss-120b": "Near AI"
+  },
+  "overall": {
+    "value": 0.851,
+    "ci95": [
+      0.7837,
+      0.9135
+    ],
+    "n": 104
+  },
+  "answer_accuracy": {
+    "value": 0.8086,
+    "ci95": [
+      0.7222,
+      0.8889
+    ],
+    "n": 81
+  },
+  "retrieval_recall": {
+    "value": 0.8889,
+    "ci95": [
+      0.821,
+      0.9444
+    ],
+    "n": 81
+  },
+  "retrieval_mrr": {
+    "value": 0.8519,
+    "ci95": [
+      0.7819,
+      0.9156
+    ],
+    "n": 81
+  },
+  "faithfulness": {
+    "value": 0.9853,
+    "ci95": [
+      0.9559,
+      1.0
+    ],
+    "n": 68
+  },
+  "false_refusal_rate": {
+    "value": 0.1605,
+    "ci95": [
+      0.0864,
+      0.2469
+    ],
+    "n": 81
+  },
+  "unanswerable_refusal": {
+    "value": 1.0,
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "n": 23
+  },
+  "latency_median_s": 1.074,
+  "prompt_tokens_median": 876.5,
+  "by_type": {
+    "fact": {
+      "value": 0.9074,
+      "ci95": [
+        0.7963,
+        1.0
+      ],
+      "n": 27
+    },
+    "multi_hop": {
+      "value": 0.25,
+      "ci95": [
+        0.0714,
+        0.4643
+      ],
+      "n": 14
+    },
+    "numeric": {
+      "value": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 15
+    },
+    "paraphrase": {
+      "value": 0.9,
+      "ci95": [
+        0.78,
+        1.0
+      ],
+      "n": 25
+    },
+    "unanswerable": {
+      "value": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 23
+    }
+  }
+}

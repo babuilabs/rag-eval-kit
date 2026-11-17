@@ -1,0 +1,126 @@
+{
+  "config": {
+    "name": "v6_more_context",
+    "description": "v4 + six passages instead of three.",
+    "chunking": {
+      "strategy": "heading",
+      "params": {
+        "max_chars": 1500
+      }
+    },
+    "retriever": {
+      "kind": "hybrid",
+      "rerank": true
+    },
+    "k": 6,
+    "prompt": "grounded"
+  },
+  "generator": "qwen/qwen3.8-27b",
+  "judge": "openai/gpt-oss-120b",
+  "n_chunks": 1841,
+  "api": "openrouter",
+  "hosts": {
+    "qwen/qwen3.8-27b": "PrimeIntellect",
+    "openai/gpt-oss-120b": "Near AI"
+  },
+  "overall": {
+    "value": 0.8846,
+    "ci95": [
+      0.8221,
+      0.9375
+    ],
+    "n": 104
+  },
+  "answer_accuracy": {
+    "value": 0.8519,
+    "ci95": [
+      0.7778,
+      0.9198
+    ],
+    "n": 81
+  },
+  "retrieval_recall": {
+    "value": 0.9136,
+    "ci95": [
+      0.8519,
+      0.963
+    ],
+    "n": 81
+  },
+  "retrieval_mrr": {
+    "value": 0.8539,
+    "ci95": [
+      0.784,
+      0.9177
+    ],
+    "n": 81
+  },
+  "faithfulness": {
+    "value": 0.9863,
+    "ci95": [
+      0.9589,
+      1.0
+    ],
+    "n": 73
+  },
+  "false_refusal_rate": {
+    "value": 0.0988,
+    "ci95": [
+      0.037,
+      0.1605
+    ],
+    "n": 81
+  },
+  "unanswerable_refusal": {
+    "value": 1.0,
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "n": 23
+  },
+  "latency_median_s": 1.556,
+  "prompt_tokens_median": 1569.0,
+  "by_type": {
+    "fact": {
+      "value": 0.9259,
+      "ci95": [
+        0.8333,
+        1.0
+      ],
+      "n": 27
+    },
+    "multi_hop": {
+      "value": 0.4643,
+      "ci95": [
+        0.25,
+        0.7143
+      ],
+      "n": 14
+    },
+    "numeric": {
+      "value": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 15
+    },
+    "paraphrase": {
+      "value": 0.9,
+      "ci95": [
+        0.78,
+        1.0
+      ],
+      "n": 25
+    },
+    "unanswerable": {
+      "value": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 23
+    }
+  }
+}

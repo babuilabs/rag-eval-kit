@@ -1,0 +1,1 @@
+{"content": "Time in lieu should be taken within 2 weeks after the completion of the on-call shift.", "usage": {"queue_time": 0.053572911, "prompt_tokens": 707, "prompt_time": 0.051310009, "completion_tokens": 20, "completion_time": 0.044106945, "total_tokens": 727, "total_time": 0.095416954}, "latency_s": 0.241}

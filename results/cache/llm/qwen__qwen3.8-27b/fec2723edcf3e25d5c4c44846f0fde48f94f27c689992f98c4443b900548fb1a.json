@@ -1,0 +1,1 @@
+{"content": "70%", "usage": {"queue_time": 0.058964307, "prompt_tokens": 645, "prompt_time": 0.047284003, "completion_tokens": 4, "completion_time": 0.007899624, "total_tokens": 649, "total_time": 0.055183627}, "latency_s": 0.217}

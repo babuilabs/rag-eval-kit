@@ -1,0 +1,1 @@
+{"content": "{\"skip\": true}", "usage": {"queue_time": 0.366154059, "prompt_tokens": 493, "prompt_time": 0.033704127, "completion_tokens": 31, "completion_time": 0.033968052, "total_tokens": 524, "total_time": 0.067672179, "completion_tokens_details": {"reasoning_tokens": 17}}, "latency_s": 0.564}

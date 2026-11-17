@@ -1,0 +1,1 @@
+{"content": "Based on the context provided, Accounts Payable will do their best to process and pay the reimbursement to the terminated team member within **1 week**.", "usage": {"queue_time": 0.067515439, "prompt_tokens": 654, "prompt_time": 0.0497573, "completion_tokens": 30, "completion_time": 0.06311361, "total_tokens": 684, "total_time": 0.11287091}, "latency_s": 0.304}

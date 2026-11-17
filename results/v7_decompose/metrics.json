@@ -1,0 +1,128 @@
+{
+  "config": {
+    "name": "v7_decompose",
+    "description": "v6 + an LLM turns each question into searches - one per item for comparisons (3 passages each, up to 6), otherwise a single rewritten search with 6 passages.",
+    "chunking": {
+      "strategy": "heading",
+      "params": {
+        "max_chars": 1500
+      }
+    },
+    "retriever": {
+      "kind": "hybrid",
+      "rerank": true
+    },
+    "k": 6,
+    "k_per_search": 3,
+    "decompose": true,
+    "prompt": "grounded"
+  },
+  "generator": "qwen/qwen3.8-27b",
+  "judge": "openai/gpt-oss-120b",
+  "n_chunks": 1841,
+  "api": "openrouter",
+  "hosts": {
+    "qwen/qwen3.8-27b": "PrimeIntellect",
+    "openai/gpt-oss-120b": "Near AI"
+  },
+  "overall": {
+    "value": 0.899,
+    "ci95": [
+      0.8413,
+      0.9471
+    ],
+    "n": 104
+  },
+  "answer_accuracy": {
+    "value": 0.8704,
+    "ci95": [
+      0.8025,
+      0.9321
+    ],
+    "n": 81
+  },
+  "retrieval_recall": {
+    "value": 0.9259,
+    "ci95": [
+      0.8704,
+      0.9753
+    ],
+    "n": 81
+  },
+  "retrieval_mrr": {
+    "value": 0.8821,
+    "ci95": [
+      0.8167,
+      0.9407
+    ],
+    "n": 81
+  },
+  "faithfulness": {
+    "value": 0.9865,
+    "ci95": [
+      0.9595,
+      1.0
+    ],
+    "n": 74
+  },
+  "false_refusal_rate": {
+    "value": 0.0864,
+    "ci95": [
+      0.0247,
+      0.1481
+    ],
+    "n": 81
+  },
+  "unanswerable_refusal": {
+    "value": 1.0,
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "n": 23
+  },
+  "latency_median_s": 0.994,
+  "prompt_tokens_median": 1519.5,
+  "by_type": {
+    "fact": {
+      "value": 0.9259,
+      "ci95": [
+        0.8148,
+        1.0
+      ],
+      "n": 27
+    },
+    "multi_hop": {
+      "value": 0.6429,
+      "ci95": [
+        0.4286,
+        0.8214
+      ],
+      "n": 14
+    },
+    "numeric": {
+      "value": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 15
+    },
+    "paraphrase": {
+      "value": 0.86,
+      "ci95": [
+        0.72,
+        0.98
+      ],
+      "n": 25
+    },
+    "unanswerable": {
+      "value": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 23
+    }
+  }
+}

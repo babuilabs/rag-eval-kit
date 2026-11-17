@@ -1,0 +1,126 @@
+{
+  "config": {
+    "name": "v2_hybrid",
+    "description": "v1 + hybrid retrieval (BM25 keyword search fused with dense search).",
+    "chunking": {
+      "strategy": "heading",
+      "params": {
+        "max_chars": 1500
+      }
+    },
+    "retriever": {
+      "kind": "hybrid",
+      "rerank": false
+    },
+    "k": 3,
+    "prompt": "basic"
+  },
+  "generator": "qwen/qwen3.8-27b",
+  "judge": "openai/gpt-oss-120b",
+  "n_chunks": 1841,
+  "api": "openrouter",
+  "hosts": {
+    "qwen/qwen3.8-27b": "PrimeIntellect",
+    "openai/gpt-oss-120b": "Near AI"
+  },
+  "overall": {
+    "value": 0.774,
+    "ci95": [
+      0.6923,
+      0.851
+    ],
+    "n": 104
+  },
+  "answer_accuracy": {
+    "value": 0.784,
+    "ci95": [
+      0.6975,
+      0.8642
+    ],
+    "n": 81
+  },
+  "retrieval_recall": {
+    "value": 0.8642,
+    "ci95": [
+      0.7963,
+      0.9259
+    ],
+    "n": 81
+  },
+  "retrieval_mrr": {
+    "value": 0.8477,
+    "ci95": [
+      0.7819,
+      0.9074
+    ],
+    "n": 81
+  },
+  "faithfulness": {
+    "value": 0.9342,
+    "ci95": [
+      0.8816,
+      0.9868
+    ],
+    "n": 76
+  },
+  "false_refusal_rate": {
+    "value": 0.1358,
+    "ci95": [
+      0.0617,
+      0.2099
+    ],
+    "n": 81
+  },
+  "unanswerable_refusal": {
+    "value": 0.7391,
+    "ci95": [
+      0.5652,
+      0.913
+    ],
+    "n": 23
+  },
+  "latency_median_s": 3.045,
+  "prompt_tokens_median": 785.5,
+  "by_type": {
+    "fact": {
+      "value": 0.9074,
+      "ci95": [
+        0.7963,
+        1.0
+      ],
+      "n": 27
+    },
+    "multi_hop": {
+      "value": 0.2857,
+      "ci95": [
+        0.0714,
+        0.5
+      ],
+      "n": 14
+    },
+    "numeric": {
+      "value": 0.9333,
+      "ci95": [
+        0.8,
+        1.0
+      ],
+      "n": 15
+    },
+    "paraphrase": {
+      "value": 0.84,
+      "ci95": [
+        0.7,
+        0.94
+      ],
+      "n": 25
+    },
+    "unanswerable": {
+      "value": 0.7391,
+      "ci95": [
+        0.5652,
+        0.913
+      ],
+      "n": 23
+    }
+  }
+}
